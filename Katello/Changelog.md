@@ -11,6 +11,7 @@
 ## 2017-01-06 - oduquesne
 - add filesystems
 - disable SELinux
+- pulp-admin and usefull script from https://access.redhat.com/solutions/1381053
 -   yum install install glances ethstatus pulp-admin
 - create user oduquesne
 - trash each package (pulp is unavailable from hammer ping , pulp sent 404 error during product addings, there were tasks in error, pulp-admin is in failure too , try to scratch ....
@@ -20,4 +21,51 @@
 - formidable tout est encore là
 - ajout des clés GPG et produits pour CentOS-7, SCLO, EPEL-7
 - sync
+- retry admin cmdline
+    yum install pulp-admin-client.noarch
+
+it works too !
+    pulpAdminPassword=$(grep ^default_password /etc/pulp/server.conf | cut -d' ' -f2)
+    pulp-admin -u admin -p $pulpAdminPassword tasks list
+    +----------------------------------------------------------------------+
+                                     Tasks
+    +----------------------------------------------------------------------+
+    
+    Operations:  
+    Resources:   orphans (content_unit)
+    State:       Waiting
+    Start Time:  Unstarted
+    Finish Time: Incomplete
+    Task Id:     49d07bb1-ce05-4f96-bae2-0d413a6b5f28
+    
+    Operations:  sync
+    Resources:   Default_Organization-CentOS-7-x86_64-CentOS-7-x86_64 (repository)
+    State:       Running
+    Start Time:  2017-01-07T00:29:39Z
+    Finish Time: Incomplete
+    Task Id:     1eaef54b-ca2f-4929-8232-5339a70505aa
+    
+    Operations:  sync
+    Resources:   Default_Organization-EPEL-7-EPEL-7 (repository)
+    State:       Running
+    Start Time:  2017-01-07T00:31:17Z
+    Finish Time: Incomplete
+    Task Id:     ffaff0d7-2494-45a6-a277-1f7c37aa80fc
+    
+    Operations:  publish
+    Resources:   Default_Organization-CentOS-7-x86_64-CentOS-7-x86_64-updates
+                 (repository)
+    State:       Waiting
+    Start Time:  Unstarted
+    Finish Time: Incomplete
+    Task Id:     6a3f5151-9dd6-4a9a-b528-33d572800d6a
+    
+    Operations:  publish
+    Resources:   Default_Organization-CentOS-7-x86_64-CentOS-7-x86_64-sclo
+                 (repository)
+    State:       Waiting
+    Start Time:  Unstarted
+    Finish Time: Incomplete
+    Task Id:     27ca529c-0cd7-48e1-aa82-ac0e171f1b07
+
 
