@@ -13,7 +13,9 @@ Connect as root user to your VM
 ## Discover Yast
 
 Launch yast
+```
    yast2
+```
 
 ### Install Software
 
@@ -50,6 +52,7 @@ Synchronize now to confirm your parameters and enable it
 
 Now try with commandline, exist Yast
 
+```
     yast -l
     yast ntp-client / Security Settings / Open firewall ports
     yast ntp-client help
@@ -57,6 +60,7 @@ Now try with commandline, exist Yast
     yast ntp-client list
     yast ntp-client disable
     yast ntp-client enable 
+```
 
     System / Kernel KDump : Check Enable
 
