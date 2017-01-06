@@ -3,28 +3,37 @@
 ## 2017-01-05 - oduquesne
 - first setup from basic OS : https://theforeman.org/plugins/katello/nightly/installation/index.html
 - fix kafo error with : https://bugzilla.redhat.com/show_bug.cgi?id=1381081
+```
     /opt/puppetlabs/puppet/bin/gem install yard
     /opt/puppetlabs/bin/puppet module install puppetlabs-strings
     foreman-installer --scenario katello --enable-foreman-plugin-ansible --enable-foreman-plugin-discovery --enable-foreman-plugin-openscap  --katello-enable-ostree
+```
 - https://localhost is available from SSH tunnels
 
 ## 2017-01-06 - oduquesne
 - add filesystems
 - disable SELinux
 - pulp-admin and usefull script from https://access.redhat.com/solutions/1381053
--   yum install install glances ethstatus pulp-admin
+```
+    yum install install glances ethstatus pulp-admin
+```
 - create user oduquesne
 - trash each package (pulp is unavailable from hammer ping , pulp sent 404 error during product addings, there were tasks in error, pulp-admin is in failure too , try to scratch ....
+```
     yum remove `rpm -qa | egrep 'katello|puppet|ruby|foreman|pulp|postgre|mongo|tomcat|http'`
     foreman-installer --scenario katello --enable-foreman-plugin-ansible --enable-foreman-plugin-discovery --enable-foreman-plugin-openscap  --katello-enable-ostree
     hammer ping => ok !!!
-- formidable tout est encore là
-- ajout des clés GPG et produits pour CentOS-7, SCLO, EPEL-7
+```
+- great, previous configuration still present in database, let's go far away
+- add some GPG keys and products : CentOS-7, SCLO, EPEL-7
 - sync
 - retry admin cmdline
+```
     yum install pulp-admin-client.noarch
+```
 
 it works too !
+```
     pulpAdminPassword=$(grep ^default_password /etc/pulp/server.conf | cut -d' ' -f2)
     pulp-admin -u admin -p $pulpAdminPassword tasks list
     +----------------------------------------------------------------------+
@@ -67,5 +76,6 @@ it works too !
     Start Time:  Unstarted
     Finish Time: Incomplete
     Task Id:     27ca529c-0cd7-48e1-aa82-ac0e171f1b07
+```
 
 
