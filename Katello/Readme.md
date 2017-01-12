@@ -79,3 +79,11 @@ it works too !
 ```
 
 
+## 2017-01-12 - oduquesne
+- disk was destroyed : complete reinstall, destroy products failed due to locked task
+- `foreman-rake katello:delete_orphaned_content RAILS_ENV=production` to remove orphaned ?
+- reinstall scenarii with `--reset` option to drop each databases
+- user recreation
+- product recreatio n & sync complete with autodiscover function and http exposition : CentOS-7 & EPEL-7
+
+
