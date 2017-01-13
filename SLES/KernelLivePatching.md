@@ -94,3 +94,31 @@ Lecture des paquetages installés...
 0 patches needed (0 security patches)
 ```
 
+# kgraft management
+```
+    kgr status
+    kgr patches
+```
+
+# Install a specific patch only
+```
+zypper patch --cve CVE-2015-8215                                                                                                                                                       
+Rafraîchissement du service 'SMT-http_adsl-172-10-1-29'.
+Chargement des données de l'espace de stockage...
+Lecture des paquetages installés...
+Résolution des dépendances de paquetages…
+
+The following 2 NEW packages are going to be installed:
+  kernel-default-3.12.67-60.64.24.1 kgraft-patch-3_12_67-60_64_24-default
+
+The following 2 NEW patches are going to be installed:
+  SUSE-SLE-SERVER-12-SP1-2015-985 SUSE-SLE-SERVER-12-SP1-2016-329
+
+The following 2 patches require a system reboot:
+  SUSE-SLE-SERVER-12-SP1-2015-985 SUSE-SLE-SERVER-12-SP1-2016-329
+
+2 new packages to install.
+Taille de téléchargement globale : 33,6 MiB. Déjà mis en cache : 0 B. Après l'opération, un 139,7 MiB supplémentaire sera utilisé.
+Le système doit être redémarré.
+continuer ? [o/n/? affiche toutes les options] (o): 
+```
