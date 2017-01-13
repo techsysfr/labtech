@@ -48,3 +48,43 @@ Backward compatibility : /usr/sbin/service is used as it was systemd, but servic
 
 ### Troubleshooting
 
+Quickly, systemd-analyze can help with
+
+basicly you have just duration booting time
+
+```
+    systemd-analyze
+```
+
+with blame option, you have each process duration time, then you can use plot option to catch the longest one
+
+```
+    systemd-analyze blame
+```
+You can enjoy graphing options to see failures
+```
+    systemd-analyze plot > graph.svg
+    systemd-analyze dot > out.dot && neato out.dot -Gsep=+20 -Goverlap=false -Tpng -o graph.png
+    systemd-analyze --from-pattern powerd.service dot > out.dot && neato out.dot -Gsep=+20 -Goverlap=false -Tpng -o graph_failed_from.png
+    systemd-analyze --to-pattern powerd.service dot > out.dot && neato out.dot -Gsep=+20 -Goverlap=false -Tpng -o graph_failed_to.png
+```
+You can check service dependancies with
+```
+    systemd-analyze verify
+
+```
+
+### How to boot in single mode
+
+```
+    systemctl rescue
+```
+
+to come back to a specific target (runlevel in SystemV) or set other booting mode
+```
+    systemctl isolate default
+    systemctl isolate multi-user
+    systemctl -t target
+    systemctl get-default
+```
+
