@@ -1,3 +1,3 @@
 # labtech
 - suse
-- playbook-elasticsearch
+- ansible
