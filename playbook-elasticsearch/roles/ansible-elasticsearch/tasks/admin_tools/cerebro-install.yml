@@ -1,0 +1,91 @@
+- name: Ensure Java is installed
+  yum: 
+    name: "java-1.8.0-openjdk.x86_64"
+    state: present                                                
+  when: ansible_os_family == 'RedHat'  
+
+- name: Install maven_artifact module requirements
+  yum:
+    name: python-lxml
+    enablerepo: EPEL
+    state: present
+
+- name: Ensure tmp cerebro directory exists
+  file:
+    path: "{{ cerebro_home }}/tmp"
+    state: directory
+    owner: "{{ cerebro_user }}"
+    group: "{{ cerebro_group }}"
+    mode: 0755
+
+- name: Download the tarball from nexus
+  maven_artifact:
+    group_id: cerebro
+    artifact_id: cerebro
+    version: "{{ cerebro_version }}"
+    extension: "tar.gz"
+    dest: "{{ cerebro_home }}/tmp"
+    owner: "{{ cerebro_user }}"
+    group: "{{ cerebro_group }}"
+    repository_url: "http://nexus/service/local/repositories/thirdparty/content"
+
+- name: Cerebro unarchive 
+  unarchive:
+    src: "{{ cerebro_home }}/tmp/{{ cerebro_tarball }}"
+    dest: "{{ cerebro_home }}"
+    remote_src: yes
+    extra_opts:
+      - "--strip=1"
+    creates: "{{ cerebro_home }}/version"
+
+- name: Chown {{ cerebro_home }}
+  file:
+    dest: "{{ cerebro_home }}"
+    owner: "{{ cerebro_user }}"
+    group: "{{ cerebro_group }}"
+    recurse: yes
+
+- name: Create version file
+  template:
+    src: "admin_tools/cerebro/version.j2"
+    dest: "{{ cerebro_home }}/version"
+    owner: "{{ cerebro_user }}"
+    group: "{{ cerebro_group }}"
+    mode: 0660
+
+- name: Ensure logs cerebro directory exists
+  file:
+    path: "{{ cerebro_log_dir }}"
+    state: directory
+    owner: "{{ cerebro_user }}"
+    group: "{{ cerebro_group }}"
+    mode: 0755
+
+- name: Ensure {{ cerebro_pid_dir }} directory exists
+  file:
+    path: "{{ cerebro_pid_dir }}"
+    state: directory
+    owner: "{{ cerebro_user }}"
+    group: "{{ cerebro_group }}"
+    mode: 0755
+
+- name: Create cerebro logrotate
+  template:
+    src: "admin_tools/cerebro/cerebro_logrotate.j2"
+    dest: "/etc/logrotate.d/{{ cerebro_user }}_cerebro"
+
+- name: Configure cerebro script init file
+  template:
+    src: "admin_tools/cerebro/init/redhat/cerebro_script_init.j2"
+    dest: "/etc/init.d/{{ cerebro_service }}"
+    mode: 750
+    owner: root
+    group: root
+  notify:
+    - restart cerebro
+
+- name: Startup cerebro service on boot
+  service:
+    name: "{{ cerebro_service }}"
+    state: started
+    enabled: yes

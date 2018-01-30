@@ -1,0 +1,26 @@
+---
+es_api_port: 9201
+es_heap_size: 1g
+es_config:
+  cluster.name: "custom-cluster"
+
+  node.name: "{{ inventory_hostname }}"
+  node.data: true
+  node.master: true
+
+  http.host: "{{ inventory_hostname }}"
+  http.port: 9201
+  http.max_content_length: 100mb
+  http.cors.allow-origin: "/.*/"
+  http.cors.enabled: true
+
+  transport.host: "{{ inventory_hostname }}"
+  transport.tcp.port: 9301
+  transport.tcp.compress: true
+
+  bootstrap.memory_lock: true
+  bootstrap.system_call_filter: false
+
+  discovery.zen.ping.unicast.hosts: "node1:9301"
+
+is_elasticsearch: true

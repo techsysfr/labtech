@@ -1,0 +1,43 @@
+- name: Check if readonlyrest plugin already installed
+  command: "{{es_home}}/bin/elasticsearch-plugin list"
+  register: check_readonlyrest_installed
+  changed_when: False
+
+- name: Download the zip file from nexus
+  maven_artifact:
+    group_id: "elasticsearch.plugins"
+    artifact_id: "readonlyrest"
+    version: "{{ es_version }}"
+    extension: "zip"
+    dest: "{{ es_user_home }}/tmp"
+    repository_url: "http://nexus/service/local/repositories/thirdparty/content"
+  when: check_readonlyrest_installed.stdout != 'readonlyrest'
+
+- name: Remove usr/share/elasticsearch/config directory
+  file:
+    path: "{{ es_user_home }}/usr/share/elasticsearch/config"
+    state: "absent"
+  when: check_readonlyrest_installed.stdout != 'readonlyrest' and es_major_version == "6.x"
+
+- name: Create symlink 
+  file:
+    src: "{{es_conf_dir}}"
+    dest: "{{ es_user_home }}/usr/share/elasticsearch/config"
+    owner: "{{ es_user }}"
+    group: "{{ es_group }}"
+    state: "link"
+  when: check_readonlyrest_installed.stdout != 'readonlyrest' and es_major_version == "6.x"
+
+- name: template readonlyrest.yml
+  template:
+    src: "plugins/readonlyrest.yml.j2"
+    dest: "{{ es_conf_dir }}/readonlyrest.yml"
+    owner: "{{ es_user }}"
+    group: "{{ es_group }}"
+    mode: "0644" 
+    force: "yes"
+  when: check_readonlyrest_installed.stdout != 'readonlyrest'
+
+- name: Install plugin
+  command: "{{es_home}}/bin/elasticsearch-plugin install file://{{ es_user_home }}/tmp/{{ readonlyrest_tarball }}"
+  when: check_readonlyrest_installed.stdout != 'readonlyrest'

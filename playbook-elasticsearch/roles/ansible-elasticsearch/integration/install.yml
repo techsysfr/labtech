@@ -1,0 +1,6 @@
+---
+- name: Install ElasticSearch master nodes
+  hosts: all
+  become: yes
+  roles:
+    - ansible-elasticsearch

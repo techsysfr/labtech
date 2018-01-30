@@ -1,0 +1,34 @@
+---
+#
+# Elasticsearch data configuration
+#
+es_user: 'bgd_elasticsearch1'
+es_group: 'elasticsearch'
+es_instance_name: "{{ es_user }}"
+es_api_port: 52300
+es_heap_size: 6g
+es_config:
+  cluster.name: "els6-cluster"
+
+  node.name: "{{ inventory_hostname|replace('-bck', '') }}"
+  node.data: true
+  node.master: false
+
+  http.host: "0.0.0.0"
+  http.port: 52300
+  http.max_content_length: 100mb
+  http.cors.allow-origin: "/.*/"
+  http.cors.enabled: true
+
+  transport.host: "0.0.0.0"
+  transport.tcp.port: 52200
+  transport.tcp.compress: true
+
+  bootstrap.memory_lock: false
+  bootstrap.system_call_filter: false
+
+  discovery.zen.ping_timeout: 10s
+  discovery.zen.ping.unicast.hosts: "monaco:52200,baticho:52200"
+  discovery.zen.minimum_master_nodes: "2"
+
+is_elasticsearch: true

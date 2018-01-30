@@ -1,0 +1,21 @@
+---
+##
+## Elasticsearch roles
+##
+
+- src: git@gitlab.socrate.vsct.fr:xl_bigdata/ansible-elasticsearch.git
+  scm: git
+  version: "master"
+
+- src: git@gitlab.socrate.vsct.fr:audric_duchet/ansible-elasticsearch.git
+  scm: git
+  name: ansible-elasticsearch-dev
+  version: "master"
+
+- src: git@gitlab.socrate.vsct.fr:xl_bigdata/ansible-telegraf.git
+  scm: git
+  version: "master"
+
+- src: git@gitlab.socrate.vsct.fr:xl_bigdata/ansible-elasticsearch-admin.git
+  scm: git
+  version: "master"

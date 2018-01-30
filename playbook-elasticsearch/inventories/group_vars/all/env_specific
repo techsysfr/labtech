@@ -1,0 +1,103 @@
+---
+es_version: "6.1.0"
+
+#Readonlyrest plugin
+install_readonlyrest: true
+
+#Flume agents
+flume_agents: "flume-assemblage-lille-s1, flume-assemblage-lille-s2"
+
+# Tools
+# Curator
+curator_es_hosts: ['monaco','baticho']
+
+# Telegraf configuration
+telegraf_user: bgd_telegraf1
+telegraf_group: telegraf
+telegraf_tags:
+  stack: "elasticsearch"
+  client: "BGD"
+  cluster: "ELS_LOG_08A_TEST_TOOLS"
+
+telegraf_outputs:
+  - name: influxdb
+    options:
+      urls: "{{ influxdb_BGD_urls }}"
+      database: "system"
+      username: "{{ influxdb_BGD_username }}"
+      password: "{{ influxdb_BGD_password }}"
+      retention_policy: "custom"
+      write_consistency: all
+      namedrop: ["elasticsearch*"]
+  - name: influxdb
+    options:
+      urls: "{{ influxdb_BGD_urls }}"
+      database: "elasticsearch"
+      username: "{{ influxdb_BGD_username }}"
+      password: "{{ influxdb_BGD_password }}"
+      retention_policy: "custom"
+      write_consistency: all
+      namepass: ["elasticsearch*"]
+
+telegraf_plugins:
+  - name: mem
+  - name: swap
+  - name: system
+  - name: cpu
+    options:
+      percpu: "true"
+      totalcpu: "true"
+      fielddrop:
+        - "time_*"
+  - name: disk
+    options:
+      mountpoints:
+        - "/DATA1"
+        - "/DATA2"
+        - "/DATA3"
+        - "/DATA4"
+        - "/DATA5"
+        - "/DATA6"
+        - "/export/appl"
+  - name: diskio
+    options:
+      skip_serial_number: "true"
+  - name: net
+    options:
+      interfaces:
+        - "eth0"
+  - name: elasticsearch
+    options:
+      servers: ["http://{{ inventory_hostname|replace('-bck', '') }}:52300"]
+      cluster_health: "true"
+      cluster_stats: "true"
+
+curator_actions:
+  - action: delete_indices
+    description: >-
+      blablabla some descriptions for this action
+    options:
+       ignore_empty_list: True
+       timeout_override:
+       continue_if_exception: False
+       disable_action: False
+    filters:
+      - filtertype: pattern
+        kind: regex
+        value: ^audric_.*
+        exclude:
+      - filtertype: age
+        source: name
+        direction: older
+        timestring: "'%Y.%m.%d'"
+        unit: minutes
+        unit_count: 1
+        exclude:
+
+curator_cron_job:
+  description: "Curate Elasticsearch Indices once per week"
+  minute:  0
+  hour:    0
+  day:     '*'
+  weekday: 6
+  month:   '*'

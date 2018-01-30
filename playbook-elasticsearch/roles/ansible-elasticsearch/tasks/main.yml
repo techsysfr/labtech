@@ -1,0 +1,8 @@
+---
+- name: Install administration tools
+  include: admin_tools/admin-tools-install.yml
+  when: "is_es_admin_tools is defined and is_es_admin_tools == true"
+
+- name: Install elasticsearch
+  include: elasticsearch.yml
+  when: "is_elasticsearch is defined and is_elasticsearch == true"
