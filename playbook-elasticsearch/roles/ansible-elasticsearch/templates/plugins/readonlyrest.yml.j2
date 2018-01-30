@@ -1,0 +1,114 @@
+readonlyrest:
+    enable: true
+    response_if_req_forbidden: Acces controlé. Merci de vous authentifier.
+
+    access_control_rules:
+
+    - name: Whitelist localhost
+      type: allow
+      hosts: [localhost]
+
+# Acces par un utilisateur LDAP
+# Ce bloc donne acces a index2 aux utilisateurs du groupe VSCT NANTES INTERNE (case sensitive)
+#    - name: Acces pour un utilisateur ldap dans un des groupes 
+#      type: allow
+#      ldap_authentication: "ldap1"                             # Nom du ldap defini ci-dessous dans la section 'ldaps'
+#      ldap_authorization:
+#          name: "ldap1"                                        # Meme nom
+#          groups: ["VSCT NANTES INTERNE"]                      # Group appartenant à 'search_groups_base_DN' defini dans 'ldaps'
+#      indices: [".kibana", "index2", "fscrawler-*"]            # Restriction d'acces par index.
+#      actions: ["cluster:admin/ingest/pipeline/*", "cluster:monitor/nodes/info","indices:data/read/*"]             # pour gerer les pipelines et les indices kibana
+#      kibana_access: rw
+
+    - name: Acces equipe bigdata
+      type: allow
+      ldap_auth:
+          name: "ldap2"
+          groups: ["Exploitation Bigdata"]
+
+        ### Acces a Kibana ###
+
+# Kibana server
+# Ce bloc permet de connecter Kibana sur els. 
+# Il faut ajouter les informations d'authent dans la config de Kibana 
+# ici : elasticsearch.username: "kibana"
+#       elasticsearch.password: "kibana"
+    - name: Kibana
+      type: allow
+      auth_key: kibana:kib4N4
+
+# User aces to Kibana
+#    - name: Accept index 1 and Kibana for user1
+#      type: allow
+#      auth_key: user1:passwd1
+#      kibana_access: rw                                        # Acces read only a Kibana (autre choix : rw)
+#      indices: [".kibana*", "toto*"]
+#      actions: ["cluster:monitor/main","indices:admin/types/exists","indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create","indices:admin/get","indices:admin/mapping/put"]
+
+# Acces pour Flume - controle IP
+    - name: Acces IP flume
+      actions: ["cluster:monitor/main","indices:admin/types/exists","indices:data/read/*","indices:data/write/*","indices:admin/template/*","indices:admin/create","indices:admin/get","indices:admin/mapping/put"]
+      hosts: [{{ flume_agents }}]
+
+# Acces pour Elastalert
+#    - name: elastalerts secu
+#      auth_key_sha256: 40b66a7b458fc061677c6bc4fca7bad97bf0525bf19ccdfb9a3981faede19092
+
+# Utilisateur local dans un groupe local
+# Cet utilisateur est defini plus bas, dans la section 'users'
+    - name: Accept local user (admin)
+      type: allow
+      groups: ["group1"]
+
+### Definition du/des connections ldaps ###
+    ldaps:
+
+    - name: ldap1
+      host: "usine-ldap-access.socrate.vsct.fr"
+      port: 636                                                 # optional, default 389
+      ssl_enabled: true                                         # optional, default true
+      ssl_trust_all_certs: true                                 # optional, default false
+      bind_dn: "CN=Srv_Phyzix,OU=Service_Accounts,OU=ARCHITECTURE,DC=groupevsc,DC=com"                     # optional, skip for anonymous bind
+      bind_password: "uXReut56"                                 # optional, skip for anonymous bind
+
+      search_user_base_DN: "OU=Users,OU=VSCT,DC=groupevsc,DC=com"
+      user_id_attribute: "sAMAccountName"                       # optional, default "uid"
+      search_groups_base_DN: "OU=Groups_flat,OU=ARCHITECTURE,DC=groupevsc,DC=com"
+      unique_member_attribute: "member"                         # optional, default "uniqueMember"
+
+      connection_pool_size: 10                                  # optional, default 30
+      connection_timeout_in_sec: 10                             # optional, default 1
+      request_timeout_in_sec: 10                                # optional, default 1
+      cache_ttl_in_sec: 60                                      # optional, default 0 - cache disabled
+
+    - name: ldap2
+      host: "usine-ldap-access.socrate.vsct.fr"
+      port: 636                                                 # optional, default 389
+      ssl_enabled: true                                         # optional, default true
+      ssl_trust_all_certs: true                                 # optional, default false
+      bind_dn: "CN=Srv_Phyzix,OU=Service_Accounts,OU=ARCHITECTURE,DC=groupevsc,DC=com"                     # optional, skip for anonymous bind
+      bind_password: "uXReut56"                                 # optional, skip for anonymous bind
+
+      search_user_base_DN: "OU=VSCT,DC=groupevsc,DC=com"
+      user_id_attribute: "sAMAccountName"                       # optional, default "uid"
+      search_groups_base_DN: "OU=Groups,OU=ARCHITECTURE,DC=groupevsc,DC=com"
+      unique_member_attribute: "member"                         # optional, default "uniqueMember"
+
+      connection_pool_size: 10                                  # optional, default 30
+      connection_timeout_in_sec: 10                             # optional, default 1
+      request_timeout_in_sec: 10                                # optional, default 1
+      cache_ttl_in_sec: 60                                      # optional, default 0 - cache disabled
+
+
+### Definition des utilisatuers et des groupes locaux ###
+    users:
+
+# Admin
+    - username: user
+      auth_key: user:p455phrase
+      groups: ["group1"]
+
+# ES Admin Tools
+    - username: "{{ curator_readonlyrest_login }}"
+      auth_key: "{{ curator_readonlyrest_login }}:{{curator_readonlyrest_password}}"
+      groups: ["group1"]

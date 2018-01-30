@@ -1,0 +1,5 @@
+- name: Install Elasticsearch Curator
+  include: curator-install.yml
+
+- name: Install Cerebro
+  include: cerebro-install.yml

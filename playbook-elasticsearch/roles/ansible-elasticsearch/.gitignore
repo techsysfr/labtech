@@ -1,0 +1,13 @@
+/vars/Debian.yml
+.kitchen/
+license*.json
+*.pyc
+.vendor
+.bundle
+Converging
+TODO
+.idea/
+elasticsearch.iml
+.vagrant/
+install.retry
+TODO.list

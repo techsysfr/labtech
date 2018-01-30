@@ -1,0 +1,20 @@
+---
+client:
+  hosts:
+{{ curator_es_hosts | to_nice_yaml | indent(4, true) }}
+  port: "{{ es_api_port }}"
+  url_prefix:
+  use_ssl: False
+  certificate:
+  client_cert:
+  client_key:
+  ssl_no_validate: False
+  http_auth: "{{curator_readonlyrest_login}}:{{curator_readonlyrest_password}}"
+  timeout: 30
+  master_only: False
+
+logging:
+  loglevel: INFO
+  logfile: "{{ curator_home }}/logs/curator.log"
+  logformat: default
+  blacklist: ['elasticsearch', 'urllib3']

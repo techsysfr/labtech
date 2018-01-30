@@ -1,0 +1,82 @@
+actions:
+{% for obj in curator_actions  %}
+  {{ loop.index }}:
+{% for key,value in obj.iteritems() %}
+
+{#- ACTION #}
+{% if key == 'action' %}
+    action: {{ value }}
+{% endif %}
+{# ACTION -#}
+
+{#- DESCRIPTION #}
+{% if key == 'description' %}
+    description: >-
+      {{ value }}
+{% endif %}
+{# DESCRIPTION -#}
+
+{#- OPTIONS #}
+{% if key == 'options' %}
+    options:
+{% for k,v in value.iteritems() %}
+{% if k == 'extra_settings' and v %}
+      extra_settings:
+{% for sk,sv in v.iteritems() %}
+{% if sv is string or sv is number %}
+        {{ sk }}: {{ sv }}
+{% else %}
+        {{ sk }}:
+{% for sub_sk,sub_sv in sv.iteritems() %}
+          {{ sub_sk }}: {{ sub_sv }}
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% else %}
+      {{ k }}: {{ v }}
+{% endif -%}
+{% endfor -%}
+{% endif %}
+{# OPTIONS -#}
+
+{#- FILTERS #}
+{% if key == 'filters' %}
+    filters:
+{% for filter in value %}
+      -
+{% for k,v in filter.iteritems() %}
+        {{ k }}: {{ v }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{# FILTERS -#}
+
+{#- ADD #}
+{% if key == 'add' %}
+    add:
+      filters:
+{% for filter in value.filters %}
+        -
+{% for k,v in filter.iteritems() %}
+          {{ k }}: {{ v }}
+{% endfor %}
+{% endfor %}
+{% endif %}
+{# ADD -#}
+
+{#- REMOVE #}
+{% if key == 'remove' %}
+    remove:
+      filters:
+{% for filter in value.filters %}
+        -
+{% for k,v in filter.iteritems() %}
+          {{ k }}: {{ v }}
+{% endfor %}
+{% endfor %}
+{% endif -%}
+{# REMOVE -#}
+
+{% endfor %}
+{% endfor %}
+

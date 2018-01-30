@@ -1,0 +1,107 @@
+---
+# Configure Elasticsearch Node
+
+#Create required directories
+- name: Create Directories
+  file: path={{ item }} state=directory owner={{ es_user }} group={{ es_group }}
+  with_items:
+    - "{{pid_dir}}"
+    - "{{log_dir}}"
+    - "{{conf_dir}}"
+
+- name: Create Data Directories
+  file: path={{ item }} state=directory owner={{ es_user }} group={{ es_group }}
+  with_items:
+    - "{{data_dirs}}"
+
+#Copy the config template
+- name: Copy Configuration File
+  template: src={{ es_major_version }}/elasticsearch.yml.j2 dest={{conf_dir}}/elasticsearch.yml owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  register: config_updated
+  notify: restart elasticsearch
+
+#Copy the instance specific default file
+- name: Copy Default File for Instance
+  template: src={{ es_major_version }}/elasticsearch.j2 dest={{instance_default_file}} mode=0644 force=yes
+  notify: restart elasticsearch
+
+#Copy the instance specific init file
+- name: Copy Debian Init File for Instance
+  template: src={{ es_major_version }}/init/debian/elasticsearch.j2 dest={{instance_init_script}} mode=0755 force=yes
+  when: ansible_os_family == 'Debian' and not use_system_d
+  notify: restart elasticsearch
+
+#Copy the instance specific init file
+- name: Copy Redhat Init File for Instance
+  template: src={{ es_major_version }}/init/redhat/elasticsearch.j2 dest={{instance_init_script}} mode=0755 force=yes
+  when: ansible_os_family == 'RedHat' 
+  notify: restart elasticsearch
+
+#Copy the systemd specific file if systemd is installed
+- name: Copy Systemd File for Instance
+  template: src={{ es_major_version }}/systemd/elasticsearch.j2 dest={{instance_sysd_script}} mode=0644 force=yes
+  when: use_system_d
+  notify:
+  - reload systemd configuration
+  - restart elasticsearch
+
+#Copy the logging.yml
+- name: Copy log4j2.properties File for Instance
+  template: src={{ es_major_version }}/log4j2.properties.j2 dest={{conf_dir}}/log4j2.properties owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  notify: restart elasticsearch
+
+- name: Copy jvm.options File for Instance
+  template: src={{ es_major_version }}/jvm.options.j2 dest={{conf_dir}}/jvm.options owner={{ es_user }} group={{ es_group }} mode=0644 force=yes
+  notify: restart elasticsearch
+
+#Clean up un-wanted package scripts to avoid confusion
+
+- name: Delete Default Init
+  file: dest=/etc/init.d/elasticsearch state=absent
+
+- name: Delete Default Environment File
+  file: dest=/etc/default/elasticsearch state=absent
+  when: ansible_os_family == 'Debian'
+
+- name: Delete Default Environment File
+  file: dest=/etc/sysconfig/elasticsearch state=absent
+  when: ansible_os_family == 'RedHat'
+
+- name: Delete Default Sysconfig File
+  file: dest="{{ sysd_script }}" state=absent
+
+- name: Delete Default Configuration File
+  file: dest=/etc/elasticsearch/elasticsearch.yml state=absent
+
+- name: Delete Default Logging File
+  file: dest=/etc/elasticsearch/logging.yml state=absent
+
+- name: Delete Default Logging File
+  file: dest=/etc/elasticsearch/log4j2.properties state=absent
+
+- name: Delete Default JVM Options File
+  file: dest=/etc/elasticsearch/jvm.options state=absent
+
+- pam_limits:
+    domain: "{{ es_user }}"
+    limit_type: soft
+    limit_item: nofile
+    value: "{{ es_max_open_files }}"
+
+- pam_limits:
+    domain: "{{ es_user }}"
+    limit_type: hard
+    limit_item: nofile
+    value: "{{ es_max_open_files }}"
+
+- pam_limits:
+    domain: "{{ es_user }}"
+    limit_type: hard
+    limit_item: nproc
+    value: "4096"
+
+- sysctl:
+    name: vm.max_map_count
+    value: 262144
+    state: present
+                
