@@ -1,1 +1,3 @@
 # labtech
+- suse
+- playbook-elasticsearch
