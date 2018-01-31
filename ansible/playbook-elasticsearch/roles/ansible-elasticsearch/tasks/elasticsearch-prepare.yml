@@ -1,5 +1,11 @@
 ---
 # Prepare Elasticsearch environment
+- name: create root path
+  file:
+    path: "/appl"
+    state: directory
+    owner: "root"
+    group: "root"
 
 - name: Create elasticsearch group
   group:

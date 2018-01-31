@@ -1,4 +1,12 @@
 ---
+- name: ansible depedencies
+  yum:
+    name: "{{item}}"
+    state: latest
+  with_items:
+    - epel-release
+    - libselinux-python
+
 - name: Install administration tools
   include: admin_tools/admin-tools-install.yml
   when: "is_es_admin_tools is defined and is_es_admin_tools == true"
