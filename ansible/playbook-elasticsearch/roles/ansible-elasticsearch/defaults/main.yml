@@ -58,6 +58,10 @@ readonlyrest_version: "1.16.14"
 readonlyrest_tarball: "readonlyrest-{{ es_version }}.zip"
 install_readonlyrest: false
 
+#Supervision
+nagios_user: "nagiosuser"
+nagios_group: "nagios"
+
 #Tools
 admin_tools_home: "/appl/{{ curator_user }}/admin_tools"
 

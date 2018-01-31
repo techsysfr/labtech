@@ -17,7 +17,7 @@ User={{es_user}}
 Group={{es_group}}
 
 ExecStart={{es_home}}/bin/elasticsearch \
-                                    -p ${PID_DIR}/${User}_elasticsearch.pid \
+                                    -p ${PID_DIR}/{{ es_user }}_elasticsearch.pid \
                                     --quiet
 
 # StandardOutput is configured to redirect to journalctl since

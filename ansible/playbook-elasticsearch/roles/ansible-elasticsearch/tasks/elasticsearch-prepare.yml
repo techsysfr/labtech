@@ -1,6 +1,29 @@
 ---
 # Prepare Elasticsearch environment
 
+- name: Create elasticsearch group
+  group:
+    name: "{{ es_group }}"
+    state: present
+
+- name: Create nagios group
+  group:
+    name: "{{ nagios_group }}"
+    state: present
+
+- name: Create es_user
+  user:
+    name: "{{ es_user }}"
+    group: "{{ es_group }}"
+    home: "/appl/{{ es_user }}"
+
+- name: Create supervision user
+  user:
+    name: "{{ nagios_user }}"
+    group: "{{ nagios_group }}"
+    home: "/appl/{{ nagios_user }}"
+
+
 - name: Ensure {{ es_user_home }} path exist
   file:
     path: "{{ es_user_home }}"
@@ -20,8 +43,8 @@
   file:
     path: "{{ es_user_home }}/admin/nagios/log"
     state: directory
-    owner: "nrpevsc"
-    group: "nagios"
+    owner: "{{ nagios_user }}"
+    group: "{{ nagios_group }}"
     mode: 0775
 
 

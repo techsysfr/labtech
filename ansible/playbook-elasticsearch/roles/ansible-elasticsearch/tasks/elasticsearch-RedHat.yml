@@ -3,11 +3,11 @@
   yum: name=libselinux-python state=present update_cache=yes
   when: ( ansible_distribution == "CentOS" ) and ( ansible_distribution_major_version == "6" )
 
-- name: Install maven_artifact module requirements
-  yum:
-    name: python-lxml
-    enablerepo: EPEL
-    state: present
+#- name: Install maven_artifact module requirements
+#  yum:
+#    name: python-lxml
+#    enablerepo: EPEL
+#    state: present
 
 - name: Create tmp directory
   file:
@@ -18,16 +18,23 @@
     state: directory
   changed_when: False
 
-- name: Download the tarball from nexus
-  maven_artifact:
-    group_id: elasticsearch
-    artifact_id: elasticsearch
-    version: "{{ es_version }}"
-    extension: "tar.gz"
+#- name: Download the tarball from nexus
+#  maven_artifact:
+#    group_id: elasticsearch
+#    artifact_id: elasticsearch
+#    version: "{{ es_version }}"
+#    extension: "tar.gz"
+#    dest: "{{ es_user_home }}/tmp"
+#    repository_url: "http://nexus/service/local/repositories/thirdparty/content"
+#  register: redhat_elasticsearch_install_from_repo
+
+- name: Copy tarball
+  copy:
+    src: "{{ es_tarball }}"
     dest: "{{ es_user_home }}/tmp"
-    repository_url: "http://nexus/service/local/repositories/thirdparty/content"
+    owner: "{{ es_user }}"
+    group: "{{ es_group }}"
   register: redhat_elasticsearch_install_from_repo
-  # become_user: "{{ es_user }}"
 
 - name: Create tmp directory
   file:

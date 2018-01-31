@@ -2,7 +2,7 @@
 es_version: "6.1.0"
 
 #Readonlyrest plugin
-install_readonlyrest: true
+install_readonlyrest: false
 
 #Flume agents
 flume_agents: "flume-assemblage-lille-s1, flume-assemblage-lille-s2"

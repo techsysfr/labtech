@@ -20,7 +20,7 @@ Group={{es_group}}
 ExecStartPre={{ es_home }}/bin/elasticsearch-systemd-pre-exec
 
 ExecStart={{es_home}}/bin/elasticsearch \
-                                    -p ${PID_DIR}/${User}_elasticsearch.pid \
+                                    -p ${PID_DIR}/{{ es_user }}_elasticsearch.pid \
                                     --quiet \
                                     -Edefault.path.logs=${LOG_DIR} \
                                     -Edefault.path.data=${DATA_DIR} \
