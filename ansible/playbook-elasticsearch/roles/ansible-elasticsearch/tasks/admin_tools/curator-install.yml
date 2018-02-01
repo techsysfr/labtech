@@ -1,9 +1,9 @@
 ---
-- name: Install maven_artifact module requirements 
-  yum:
-    name: python-lxml
-    enablerepo: EPEL
-    state: present
+#- name: Install maven_artifact module requirements 
+#  yum:
+#    name: python-lxml
+#    enablerepo: EPEL
+#    state: present
 
 - name: Ensure config curator directory exists
   file:
@@ -38,24 +38,24 @@
     group: "{{ curator_group }}"
     mode: 0755
 
-- name: Download the rpm from nexus
-  maven_artifact:
-    group_id: elasticsearch-curator
-    artifact_id: elasticsearch-curator
-    version: "{{ curator_version }}"
-    extension: "rpm"
+#- name: Download the rpm from nexus
+# maven_artifact:
+#   group_id: elasticsearch-curator
+#   artifact_id: elasticsearch-curator
+#   version: "{{ curator_version }}"
+#   extension: "rpm"
+#   dest: "{{ curator_home }}/tmp"
+#   owner: "{{ curator_user }}"
+#   group: "{{ curator_group }}"
+#   repository_url: "http://nexus/service/local/repositories/thirdparty/content"
+
+- name: Copy curator rpm
+  copy:
+    src: "admin_tools/{{curator_rpm }}"
     dest: "{{ curator_home }}/tmp"
     owner: "{{ curator_user }}"
     group: "{{ curator_group }}"
-    repository_url: "http://nexus/service/local/repositories/thirdparty/content"
-
-#- name: Copy curator rpm
-#  copy:
-#    src: "admin_tools/{{curator_rpm }}"
-#    dest: "{{ curator_home }}/tmp"
-#    owner: "{{ curator_user }}"
-#    group: "{{ curator_group }}"
-#    mode: 0755
+    mode: 0755
 
 - name: Curator install via yum
   yum:

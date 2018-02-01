@@ -4,11 +4,11 @@
     state: present                                                
   when: ansible_os_family == 'RedHat'  
 
-- name: Install maven_artifact module requirements
-  yum:
-    name: python-lxml
-    enablerepo: EPEL
-    state: present
+#- name: Install maven_artifact module requirements
+#  yum:
+#    name: python-lxml
+#    enablerepo: EPEL
+#    state: present
 
 - name: Ensure tmp cerebro directory exists
   file:
@@ -18,16 +18,23 @@
     group: "{{ cerebro_group }}"
     mode: 0755
 
-- name: Download the tarball from nexus
-  maven_artifact:
-    group_id: cerebro
-    artifact_id: cerebro
-    version: "{{ cerebro_version }}"
-    extension: "tar.gz"
+#- name: Download the tarball from nexus
+#  maven_artifact:
+#    group_id: cerebro
+#    artifact_id: cerebro
+#    version: "{{ cerebro_version }}"
+#    extension: "tar.gz"
+#    dest: "{{ cerebro_home }}/tmp"
+#    owner: "{{ cerebro_user }}"
+#    group: "{{ cerebro_group }}"
+#    repository_url: "http://nexus/service/local/repositories/thirdparty/content"
+
+- name: Copy tarball
+  copy:
+    src: "{{ cerebro_tarball }}"
     dest: "{{ cerebro_home }}/tmp"
     owner: "{{ cerebro_user }}"
     group: "{{ cerebro_group }}"
-    repository_url: "http://nexus/service/local/repositories/thirdparty/content"
 
 - name: Cerebro unarchive 
   unarchive:
