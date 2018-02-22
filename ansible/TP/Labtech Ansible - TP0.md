@@ -13,7 +13,7 @@ ssh root@labtech-ansibleXX.lab-techsys.fr
 
 Mot de passe : Z********59*
 
-Il sera √©cit sur le tableau ;-)
+Il sera √crit sur le tableau ;-)
 
 Vous tombez sur la VM **labtech_ansible_master**, o√ vous pourrez installer ansible. De la vous pourrez rebondir sur la **labtech_ansible_slave**.
 
