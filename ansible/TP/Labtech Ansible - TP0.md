@@ -60,7 +60,7 @@ DNS = labtech-ansible07.lab-techsys.fr = 213.32.49.88
 187 CloudAdmin oneadmin labtech_ansible_master RUNNING CLS01 172.10.0.113
 177 CloudAdmin oneadmin labtech_ansible_slave RUNNING CLS01 172.10.0.41
 
-NODE 08 -- AurÃ©lien BERTOLASO
+NODE 08 -- Aurélien BERTOLASO
 DNS = labtech-ansible08.lab-techsys.fr = 213.32.49.89
 186 CloudAdmin oneadmin labtech_ansible_master RUNNING CLS01 172.10.0.112
 176 CloudAdmin oneadmin labtech_ansible_slave RUNNING CLS01 172.10.0.99
@@ -80,7 +80,7 @@ DNS = labtech-ansible11.lab-techsys.fr = 178.32.157.185
 labtech_ansible_master RUNNING GAIDEN-CLS01 192.168.59.108
 labtech_ansible_slave RUNNING GAIDEN-CLS01 192.168.59.116
 
-NODE 12 -- Jean-FranÃ§ois DUPONT
+NODE 12 -- Jean-François DUPONT
 DNS = labtech-ansible12.lab-techsys.fr = 178.32.157.189
 labtech_ansible_master RUNNING GAIDEN-CLS01 192.168.59.148
 labtech_ansible_slave RUNNING GAIDEN-CLS01 192.168.59.112
