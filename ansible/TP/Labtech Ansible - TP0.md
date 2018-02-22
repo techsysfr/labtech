@@ -5,17 +5,18 @@ TP 0 : Utilisation des VMs
 
 Chacun vous disposez d'un NODE de 2 VMs.
 
-Pour chaque, vous devez d'abord rebondir en ssh sur l'IP publique. Il y a une entrÃ©e DNS pour vous faciliter la vie :
+Pour chaque, vous devez d'abord rebondir en ssh sur l'IP publique. Il y a une entrée DNS pour vous faciliter la vie :
 
 ```
 ssh root@labtech-ansibleXX.lab-techsys.fr
-```
 
 Mot de passe : Z********59*
+```
 
-Il sera Ãcrit sur le tableau ;-)
 
-Vous tombez sur la VM **labtech_ansible_master**, oÃ vous pourrez installer ansible. De la vous pourrez rebondir sur la **labtech_ansible_slave**.
+Il sera écrit sur le tableau ;-)
+
+Vous tombez sur la VM **labtech_ansible_master**, où vous pourrez installer ansible. De la vous pourrez rebondir sur la **labtech_ansible_slave**.
 
 
 ### Liste des NODES 
