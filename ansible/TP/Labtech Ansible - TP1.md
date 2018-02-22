@@ -166,7 +166,7 @@ On crée le fichier yaml test.yml :
         state: latest
 
     - name: Show uptime
-        shell: "uptime"
+      shell: "uptime"
 ```
 
 On l'execute : 
