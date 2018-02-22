@@ -1,7 +1,7 @@
 TP 0 : Utilisation des VMs
 ====================
 
-### Comment utiliser les VMs
+### Comment utiliser les VMs ?
 
 Chacun vous disposez d'un NODE de 2 VMs.
 
@@ -15,7 +15,7 @@ Mot de passe : Z********59*
 
 Il sera écit sur le tableau ;-)
 
-Vous tombez sur la VM **labtech_ansible_master**, oùvous pourrez installer ansible. De la vous pourrez rebondir sur la **labtech_ansible_slave**.
+Vous tombez sur la VM **labtech_ansible_master**, o� vous pourrez installer ansible. De la vous pourrez rebondir sur la **labtech_ansible_slave**.
 
 
 ### Liste des NODES 
@@ -74,13 +74,11 @@ DNS = labtech-ansible10.lab-techsys.fr = 213.32.49.93
 184 CloudAdmin oneadmin labtech_ansible_master RUNNING CLS01 172.10.0.110
 174 CloudAdmin oneadmin labtech_ansible_slave RUNNING CLS01 172.10.0.71
 
-
 NODE 11 -- Emmanuel ROGGE
 DNS = labtech-ansible11.lab-techsys.fr = 178.32.157.185
 labtech_ansible_master RUNNING GAIDEN-CLS01 192.168.59.108
 labtech_ansible_slave RUNNING GAIDEN-CLS01 192.168.59.116
 
- 
 NODE 12 -- Jean-François DUPONT
 DNS = labtech-ansible12.lab-techsys.fr = 178.32.157.189
 labtech_ansible_master RUNNING GAIDEN-CLS01 192.168.59.148
