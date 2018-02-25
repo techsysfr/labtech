@@ -1,0 +1,42 @@
+- hosts: [slave]
+  become: yes
+  tasks:
+    - name: Installer le paquet libselinux-python
+      yum:
+       name: libselinux-python
+       state: latest
+       disable_gpg_check: no
+       update_cache: yes
+
+    - name: add epel repo
+      yum_repository:
+       name: epel
+       baseurl: http://mirrors.ircam.fr/pub/fedora/epel/7/x86_64/
+       description: EPEL YUM repo
+       enabled: yes
+       gpgkey: http://mirrors.ircam.fr/pub/fedora/epel/RPM-GPG-KEY-EPEL-7
+       gpgcheck: yes
+
+    - name: Installer le paquet nginx
+      yum:
+       name: nginx
+       state: latest
+       disable_gpg_check: no
+       update_cache: yes
+
+    - name: change nginx config
+      copy:
+        src: files/nginx.conf
+        dest: /etc/nginx/nginx.conf
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: replace nginx config value
+      replace:
+        backup: yes
+        path: /etc/nginx/nginx.conf
+        regexp: '(\s+)worker_connections(\s*.*)?$'
+        replace: '\n   worker_connections 2048'
+
+
