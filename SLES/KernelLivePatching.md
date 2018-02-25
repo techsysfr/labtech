@@ -122,3 +122,5 @@ Taille de téléchargement globale : 33,6 MiB. Déjà mis en cache : 0 B. Apr�
 Le système doit être redémarré.
 continuer ? [o/n/? affiche toutes les options] (o): 
 ```
+# Lien vers la doc Lifecycle
+https://www.suse.com/support/policy.html
