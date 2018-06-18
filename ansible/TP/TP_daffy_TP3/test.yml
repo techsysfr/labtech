@@ -1,0 +1,10 @@
+- hosts: [slave]
+  become: yes
+  tasks:
+   - name: Install httpd package
+     yum:
+      name: httpd
+      state: latest
+
+   - name: Show uptime
+     shell: uptime

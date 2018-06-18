@@ -1,0 +1,6 @@
+- hosts: [slave]
+  become: yes
+
+  roles:
+    - apache
+
