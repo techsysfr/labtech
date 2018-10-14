@@ -1,3 +1,4 @@
+/*
 variable "credentials" {
   description = "Zone where create new ressources"
   default     = "../terraform_key.json"
@@ -37,3 +38,4 @@ variable "oslogin" {
   description = "OS Login activation on Project ? Will be a booleen !"
   default     = true
 }
+*/

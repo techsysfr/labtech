@@ -71,7 +71,7 @@ Aprés avoir récupéré le json voir ci-dessus, il faut enregistrer la variable
 
 ## Premier déploiement
 
-Créer un dossier (n'importe ou) et positionnez-vous dans ce dossier.  
+Créer un dossier TP0 (n'importe ou) et positionnez-vous dans ce dossier.  
 Créer le fichier `main.tf`
 
 ### Configurer votre providers
@@ -95,11 +95,11 @@ Sur GCP, toute ressource créée nécessite un projet. Il est donc nécessaire d
 Ajouter dans le ficher `main.tf` :
 
 ```hcl
-resource "google_project" "project" {
+resource "google_project" "project-yourname" {
   name                = "labtech-tf-yourname"
   project_id          = "techsys-labtech-tf-yourname"
-  billing_account     = "" #
-  folder_id           = "" #
+  billing_account     = "" # id du billing account
+  folder_id           = "" # id du dossier où le projet doit être créé
   auto_create_network = "false" # Evite la création des réseaux par défaut qui ne sont pas nécessaires.
 }
 ```
@@ -111,10 +111,17 @@ Durant cette commande, terraform télécharge automatiquement le plugin nécessa
 ![terra_folder](screenshot/terraform_folder.png "terra_folder")  
 Un fichier lock.json est aussi créé qui permettra de générer un lock sur le fichier **state**.  
 Une fois initialisé, on peut lancer le `terraform plan` qui permet de vérifier l'éxécution de votre terraform.  
-Cela permet de vérifier ce qui va être créé/modifié/supprimé sans que ça soit effectif.  
+Cela permet de vérifier ce qui va être créé/modifié/supprimé sans que ça soit effectif.
 ```cmd
 terraform plan
 ```
+Cela affichera les différentes modification appliquer par le plan :
++ create
+- distroy
+~ update in-place
+
+Dans notre cas, il s'agit seulement d'une création.
+
 Vous pouvez ensuite lancer le `terrafrom apply` qui va exécuter le code et créé (dans notre cas) le projet.  
 
 ```cmd

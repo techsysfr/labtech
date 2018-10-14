@@ -1,2 +1,4 @@
 *.retry
 *.DS_Store
+*.terraform
+*.tfstate*
