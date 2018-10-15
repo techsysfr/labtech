@@ -32,6 +32,7 @@ Ca vous facilitera le développement : autocomplétion, indentation auto, colora
 gcloud auth application-default login
 ```
 
+Utilisez vos identifiants Techsys O365 (si vous n'avez pas de compte techsys, utiliser votre compte Google)  
 Vous obtiendrez les informations suivantes :
 
 ```cmd
