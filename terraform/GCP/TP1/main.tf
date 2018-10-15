@@ -7,7 +7,16 @@ provider "google" {
 resource "google_project" "project-testmdr" {
   name                = "labtech-tf-testmdr"
   project_id          = "techsys-labtech-tf-testmdr"
-  billing_account     = "" #
-  folder_id           = "" #
+  billing_account     = "0174AF-BE8A96-2C514B" #
+  folder_id           = "875105072392" #
   auto_create_network = "false" # Evite la création des réseaux par défaut qui ne sont pas nécessaires.
+}
+
+terraform {
+  backend "gcs" {
+    project = "techsys-infrastructure"           # nom du projet qui héberge le bucket
+    region  = "eu-west1"
+    bucket  = "techsys-infrastructure-terraform" # nom du bucket
+    prefix  = "testmdr"                         # A changer pour chaque project terraform
+  }
 }

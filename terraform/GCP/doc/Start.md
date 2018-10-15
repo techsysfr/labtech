@@ -104,28 +104,129 @@ resource "google_project" "project-yourname" {
 }
 ```
 
-Maintenant que notre description est faite , nous pouvons exécuter terraform.  
+Maintenant que notre description est faite, nous pouvons exécuter terraform.  
 Dans votre cmd ou shell, aller dans le dossier créé où se trouve votre fichier main.tf et éxécuter: `terraform init`.  
+
+```cmd
+terraform init
+
+
+Initializing provider plugins...
+- Checking for available provider plugins on https://releases.hashicorp.com...
+- Downloading plugin for provider "google" (1.18.0)...
+
+Terraform has been successfully initialized!
+
+You may now begin working with Terraform. Try running "terraform plan" to see
+any changes that are required for your infrastructure. All Terraform commands
+should now work.
+
+If you ever set or change modules or backend configuration for Terraform,
+rerun this command to reinitialize your working directory. If you forget, other
+commands will detect it and remind you to do so if necessary.
+
+```
+
 Cette commande est à lancer la première fois pour initialiser le répertoire.  
 Durant cette commande, terraform télécharge automatiquement le plugin nécessaire au provider renseigné (pour l'OS utilisé) :  
 ![terra_folder](screenshot/terraform_folder.png "terra_folder")  
 Un fichier lock.json est aussi créé qui permettra de générer un lock sur le fichier **state**.  
 Une fois initialisé, on peut lancer le `terraform plan` qui permet de vérifier l'éxécution de votre terraform.  
-Cela permet de vérifier ce qui va être créé/modifié/supprimé sans que ça soit effectif.
+Cela permet de vérifier ce qui va être créé/modifié/supprimé sans que cela soit effectif.
+
 ```cmd
 terraform plan
+
+Refreshing Terraform state in-memory prior to plan...
+The refreshed state will be used to calculate this plan, but will not be
+persisted to local or remote state storage.
+
+
+------------------------------------------------------------------------
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  + google_project.project-testmdr
+      id:                  <computed>
+      auto_create_network: "false"
+      folder_id:           <computed>
+      name:                "labtech-tf-testmdr"
+      number:              <computed>
+      org_id:              <computed>
+      policy_data:         <computed>
+      policy_etag:         <computed>
+      project_id:          "techsys-labtech-tf-testmdr"
+      skip_delete:         <computed>
+
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+------------------------------------------------------------------------
 ```
-Cela affichera les différentes modification appliquer par le plan :
-+ create
-- distroy
-~ update in-place
+
+Cela affichera des codes différents en fonction des modifications appliquées par le plan :  
+`+` pour ce qui va être créé  
+`-` pour ce qui va être détruit  
+`~` pour ce qui va être mis à jour (pas de suppression)  
 
 Dans notre cas, il s'agit seulement d'une création.
-
-Vous pouvez ensuite lancer le `terrafrom apply` qui va exécuter le code et créé (dans notre cas) le projet.  
+Vous pouvez ensuite lancer le `terrafrom apply` qui va cette fois exécuter le code et créé (dans notre cas) le projet.  
 
 ```cmd
 terraform apply
+
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+
+Terraform will perform the following actions:
+
+  + google_project.project-testmdr
+      id:                  <computed>
+      auto_create_network: "false"
+      folder_id:           <computed>
+      name:                "labtech-tf-testmdr"
+      number:              <computed>
+      org_id:              <computed>
+      policy_data:         <computed>
+      policy_etag:         <computed>
+      project_id:          "techsys-labtech-tf-testmdr"
+      skip_delete:         <computed>
+
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+  Enter a value: yes
+
+google_project.project-testmdr: Creating...
+  auto_create_network: "" => "false"
+  folder_id:           "" => "<computed>"
+  name:                "" => "labtech-tf-testmdr"
+  number:              "" => "<computed>"
+  org_id:              "" => "<computed>"
+  policy_data:         "" => "<computed>"
+  policy_etag:         "" => "<computed>"
+  project_id:          "" => "techsys-labtech-tf-testmdr"
+  skip_delete:         "" => "<computed>"
+google_project.project-testmdr: Still creating... (10s elapsed)
+................
+google_project.project-testmdr: Still creating... (3m20s elapsed)
+google_project.project-testmdr: Creation complete after 3m20s (ID: techsys-labtech-tf-testmdr)
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 ```
 
-Lors du premier terraform apply, un fichier est créé
+Lors du premier terraform apply, un fichier est créé : `terrafomr.tfsate`  
+Ce fichier comprend toutes les modifications effectuées : c'est l'état de votre projet terraform.  
+Il s'agit d'un fichier json et quand on l'ouvre, on voit toutes les informations liées aux ressources créées.  
+Ici : le projet.
+
+_La suite mardi soir_!
