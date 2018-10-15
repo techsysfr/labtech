@@ -76,7 +76,7 @@ Créer le fichier `main.tf`
 
 __Attention, renommer dans tous les exercices yourname par votre nom pour différencier les projets.__
 
-### Configurer votre providers
+### Configurer votre provider
 
 Il faut d'abord déclarer le provider pour décrire à terraform où déployer vos ressources.  
 Modifier le fichier `main.tf` et ajouter :
@@ -231,4 +231,4 @@ Ce fichier comprend toutes les modifications effectuées : c'est l'état de votr
 Il s'agit d'un fichier json et quand on l'ouvre, on voit toutes les informations liées aux ressources créées.  
 Ici : le projet.
 
-_La suite mardi soir_!
+_La suite mardi soir_ !
