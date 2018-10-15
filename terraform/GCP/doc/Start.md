@@ -1,6 +1,6 @@
 # Labtech Terraform
 
-## Pré-requis terraform
+## Pré-requis Terraform
 
 ### Installation de Terraform
 
@@ -9,9 +9,9 @@ Mettre le chemin du binaire dans votre PATH (pas d'installation nécessaire):
 
 - Windows : `setx path "%path%;c:\terrafrom"` par exemple
 
-- Linux : `export PATH="$PATH:/home/mdrouet/terraform"` par exemple (et à ajouter dans votre /home/.profile)
+- Linux : `export PATH="$PATH:/home/mdrouet/terraform"` par exemple (et à ajouter dans votre /home/.bashrc)
 
-Pour vérifier que votre installation est correct, lancer un shell et exécuter : `terraform -version`.  
+Pour vérifier que votre installation est correcte, lancer un shell et exécuter : `terraform -version`.  
 Vous devez avoir avoir une réponse du style : `Terraform v0.11.8`
 
 ### IDE
@@ -58,7 +58,7 @@ Il faut ensuite lui donner des permissions sur l'organisation afin qu'il puisse 
 Puisque dans notre cas, nous voulons créer aussi le projet par Terraform, j'ai créé un service account vous permettant d'effectuer les TPs.
 J'ai déjà positionné les permissions sur l'organisation Techsys.
 Voici le service account à utiliser : svcaccount-terraform@techsys-infrastructure.iam.gserviceaccount.com.
-Le json d'authentification est disponible [ici.](https://console.cloud.google.com/storage/browser/techsys-infrastructure-terraform)  
+Le json d'authentification est disponible [ici.](https://console.cloud.google.com/storage/browser/techsys-infrastructure-terraform/). Il s'agit du fichier techsys-infrastructure-7225b741c637.json  
 Bien entendu, seul les utilisateurs autorisés peuvent accéder à ce bucket et donc récupérer ce fichier.
 
 #### Configuration de la variable d'environnement
@@ -73,6 +73,8 @@ Aprés avoir récupéré le json voir ci-dessus, il faut enregistrer la variable
 
 Créer un dossier TP0 (n'importe ou) et positionnez-vous dans ce dossier.  
 Créer le fichier `main.tf`
+
+__Attention, renommer dans tous les exercices yourname par votre nom pour différencier les projets.__
 
 ### Configurer votre providers
 
@@ -150,16 +152,16 @@ Resource actions are indicated with the following symbols:
 
 Terraform will perform the following actions:
 
-  + google_project.project-testmdr
+  + google_project.project-yourname
       id:                  <computed>
       auto_create_network: "false"
       folder_id:           <computed>
-      name:                "labtech-tf-testmdr"
+      name:                "labtech-tf-yourname"
       number:              <computed>
       org_id:              <computed>
       policy_data:         <computed>
       policy_etag:         <computed>
-      project_id:          "techsys-labtech-tf-testmdr"
+      project_id:          "techsys-labtech-tf-yourname"
       skip_delete:         <computed>
 
 
@@ -185,16 +187,16 @@ Resource actions are indicated with the following symbols:
 
 Terraform will perform the following actions:
 
-  + google_project.project-testmdr
+  + google_project.project-yourname
       id:                  <computed>
       auto_create_network: "false"
       folder_id:           <computed>
-      name:                "labtech-tf-testmdr"
+      name:                "labtech-tf-yourname"
       number:              <computed>
       org_id:              <computed>
       policy_data:         <computed>
       policy_etag:         <computed>
-      project_id:          "techsys-labtech-tf-testmdr"
+      project_id:          "techsys-labtech-tf-yourname"
       skip_delete:         <computed>
 
 
@@ -206,25 +208,25 @@ Do you want to perform these actions?
 
   Enter a value: yes
 
-google_project.project-testmdr: Creating...
+google_project.project-yourname: Creating...
   auto_create_network: "" => "false"
   folder_id:           "" => "<computed>"
-  name:                "" => "labtech-tf-testmdr"
+  name:                "" => "labtech-tf-yourname"
   number:              "" => "<computed>"
   org_id:              "" => "<computed>"
   policy_data:         "" => "<computed>"
   policy_etag:         "" => "<computed>"
-  project_id:          "" => "techsys-labtech-tf-testmdr"
+  project_id:          "" => "techsys-labtech-tf-yourname"
   skip_delete:         "" => "<computed>"
-google_project.project-testmdr: Still creating... (10s elapsed)
+google_project.project-yourname: Still creating... (10s elapsed)
 ................
-google_project.project-testmdr: Still creating... (3m20s elapsed)
-google_project.project-testmdr: Creation complete after 3m20s (ID: techsys-labtech-tf-testmdr)
+google_project.project-yourname: Still creating... (3m20s elapsed)
+google_project.project-yourname: Creation complete after 3m20s (ID: techsys-labtech-tf-yourname)
 
 Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
 ```
 
-Lors du premier terraform apply, un fichier est créé : `terrafomr.tfsate`  
+Lors du premier terraform apply, un fichier est créé : `terraform.tfsate`  
 Ce fichier comprend toutes les modifications effectuées : c'est l'état de votre projet terraform.  
 Il s'agit d'un fichier json et quand on l'ouvre, on voit toutes les informations liées aux ressources créées.  
 Ici : le projet.
