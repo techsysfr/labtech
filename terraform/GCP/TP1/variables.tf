@@ -83,10 +83,6 @@ variable "fw_default_priority" {
   default     = "1000"
 }
 
-locals {
-  final_gce_svc_account = "${google_service_account.gce_service_account.Name}@${google_project.project.project_id}.iam.gserviceaccount.com"
-}
-
 /*
 
 

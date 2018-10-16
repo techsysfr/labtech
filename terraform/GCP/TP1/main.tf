@@ -54,6 +54,6 @@ resource "google_project_iam_custom_role" "backup_custom_role" {
 resource "google_project_iam_member" "backup_custom_iam" {
   project = "${google_project.project-testmdr.project_id}"
   role    = "projects/${google_project.project-testmdr.project_id}/roles/${google_project_iam_custom_role.backup_custom_role.role_id}"
-  member  = "serviceAccount:${local.final_gce_svc_account}"
-  depends_on = ["google_project_iam_member.project","google_project_iam_custom_role.backup_custom_role"]
+  member  = "serviceAccount:${google_service_account.gce_service_account.email}"
+  depends_on = ["google_project_iam_custom_role.backup_custom_role"]
 }
