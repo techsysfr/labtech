@@ -20,3 +20,25 @@ terraform {
     prefix  = "testmdr"                         # A changer pour chaque project terraform
   }
 }
+
+resource "google_project_services" "project-testmdr" {
+  project = "${google_project.project-testmdr.project_id}"   # On retrouve ici l'interpolation : On récupère l'ID à partir de la resource projet qui doit être créé en amont.
+  services = "${var.api-activated}"
+  depends_on = ["google_project.project-testmdr"] # permet de préciser des dépendences. Ici, cela permet d'attendre la création complète du projet pour activer les API. L'interpolation devrait suffire mais l'ID est surement récupéré avant la fin de l'initialisation du projet.
+}
+
+resource "google_compute_network" "vpc_network" {
+  name                    = "${var.vpcname}"                                   # utilisation d'une variable pour utiliser le même nom
+  auto_create_subnetworks = "false"
+  depends_on      = ["google_project_services.project-testmdr"]
+}
+
+resource "google_compute_subnetwork" "vpc_subnetwork" {
+  name                     = "sub-net-1"
+  ip_cidr_range            = "10.224.0.160/28"                                 # Subnet à utiliser en mode CIDR (utiliser votre réseau voir tableau ci-dessous)
+  network                  = "${google_compute_network.vpc_network.self_link}" # Interpolation : récupération de l'URL du VPC créé ci-dessus
+  region                   = "${var.region}"
+  #project                  = "${google_project.project-testmdr.project_id}"           # Interpolation : ID du projet optionel car vous spécifiez le projet dans le block provider.
+  private_ip_google_access = "true"                                            # permet d'accéder aux services Google Public sans sortir sur Internet.
+  enable_flow_logs = "true"                                                    # active les logs sur ce réseau
+}
