@@ -78,6 +78,15 @@ variable "api_permissions" {
   default     = ["logging-write", "monitoring-write", "storage-rw", "service-management", "compute-rw", "service-control"]
 }
 
+variable "fw_default_priority" {
+  description = "FW Default priority"
+  default     = "1000"
+}
+
+locals {
+  final_gce_svc_account = "${google_service_account.gce_service_account.Name}@${google_project.project.project_id}.iam.gserviceaccount.com"
+}
+
 /*
 
 
@@ -97,10 +106,7 @@ variable "image_project" {
 }
 
 
-variable "fw_default_priority" {
-  description = "FW Default priority"
-  default     = "1000"
-}
+
 
 variable "api_permissions" {
   type        = "list"

@@ -242,10 +242,10 @@ variable "api-activated" {
 Modifier ensuite le fichier main.tf comme ci-dessous :
 
 ```HCL
-resource "google_project_services" "project-testmdr" {
-  project = "${google_project.project-testmdr.project_id}"   # On retrouve ici l'interpolation : On récupère l'ID à partir de la resource projet qui doit être créé en amont.
+resource "google_project_services" "project-yourname" {
+  project = "${google_project.project-yourname.project_id}"   # On retrouve ici l'interpolation : On récupère l'ID à partir de la resource projet qui doit être créé en amont.
   services = "${var.api-activated}"                          # utilisation de la variable.
-  depends_on = ["google_project.project-testmdr"]            # permet de préciser des dépendences. Ici, cela permet d'attendre la création complète du projet pour activer les API. L'interpolation devrait suffire mais l'ID est surement récupéré avant la fin de l'initialisation du projet.
+  depends_on = ["google_project.project-yourname"]            # permet de préciser des dépendences. Ici, cela permet d'attendre la création complète du projet pour activer les API. L'interpolation devrait suffire mais l'ID est surement récupéré avant la fin de l'initialisation du projet.
 }
 ```
 
@@ -261,7 +261,7 @@ Pour cela, ajouter les informations suivantes dans le fichier `main.tf`:
 resource "google_compute_network" "vpc_network" {
   name                    = "${var.vpcname}"                                   # utilisation d'une variable pour utiliser le même nom
   auto_create_subnetworks = "false"
-  depends_on      = ["google_project_services.project-testmdr"]
+  depends_on      = ["google_project_services.project-yourname"]
 }
 
 resource "google_compute_subnetwork" "vpc_subnetwork" {
@@ -269,7 +269,7 @@ resource "google_compute_subnetwork" "vpc_subnetwork" {
   ip_cidr_range            = "10.224.0.160/28"                                 # Subnet à utiliser en mode CIDR (utiliser votre réseau voir tableau ci-dessous)
   network                  = "${google_compute_network.vpc_network.self_link}" # Interpolation : récupération de l'URL du VPC créé ci-dessus
   region                   = "${var.region}"
-  #project                  = "${google_project.project-testmdr.project_id}"           # Interpolation : ID du projet optionel car vous spécifiez le projet dans le block provider.
+  #project                  = "${google_project.project-yourname.project_id}"           # Interpolation : ID du projet optionel car vous spécifiez le projet dans le block provider.
   private_ip_google_access = "true"                                            # permet d'accéder aux services Google Public sans sortir sur Internet.
   enable_flow_logs = "true"                                                    # active les logs sur ce réseau
 }
@@ -322,13 +322,13 @@ locals {
 resource "google_service_account" "gce_service_account" {               # Service account à créer pour gérer les Engines
   account_id   = "${var.gce_svc_account}"
   display_name = "Compte de service GCE"
-  project      = "${google_project.project-testmdr.project_id}"
-  depends_on   = ["google_project_services.project-testmdr"]
+  project      = "${google_project.project-yourname.project_id}"
+  depends_on   = ["google_project_services.project-yourname"]
 }
 
 resource "google_compute_disk" "boot" {
   name    = "${var.instance_name}-boot-${local.datetime}"                # Ici, on va construire le nom du disque.
-  project = "${google_project.project-testmdr.project_id}"               # Project ID optionel puisqu'on l'utilise dans le block provider
+  project = "${google_project.project-yourname.project_id}"               # Project ID optionel puisqu'on l'utilise dans le block provider
   type    = "${var.disk_type}"
   size    = "${var.disk_size}"
   zone    = "${var.zone}"
@@ -342,7 +342,7 @@ resource "google_compute_disk" "boot" {
 
 resource "google_compute_disk" "data" {                                  # Disque Data
   name = "${var.instance_name}-data-${local.datetime}"
-  project = "${google_project.project-testmdr.project_id}"
+  project = "${google_project.project-yourname.project_id}"
   type    = "${var.disk_type}"
   size    = "${var.data_disk_size}"
   zone    = "${var.zone}"
@@ -356,7 +356,7 @@ resource "google_compute_disk" "data" {                                  # Disqu
 resource "google_compute_instance" "instances" {
   name         = "${var.instance_name}"
   zone         = "${var.zone}"
-  project = "${google_project.project-testmdr.project_id}"
+  project = "${google_project.project-yourname.project_id}"
   machine_type = "${var.machine_type}"
 
   boot_disk = {
@@ -371,7 +371,7 @@ resource "google_compute_instance" "instances" {
 
   network_interface = {
     subnetwork         = "${google_compute_subnetwork.vpc_subnetwork.name}"
-    subnetwork_project = "${google_project.project-testmdr.project_id}"
+    subnetwork_project = "${google_project.project-yourname.project_id}"
     access_config {
       // Ephemeral IP
       network_tier = "STANDARD"                                            # Indique le type de réseau public à utiliser (network tier) : https://cloud.google.com/network-tiers/
@@ -449,11 +449,46 @@ variable "api_permissions" {
 }
 ```
 
-## Permission / Role
+## Firewall
+
+Il faut maintenant effectuer les ouvertures FW pour accéder à votre serveur.
+Créer un fichier firewall.tf et ajouter la règle suivantes :
 
 ```HLC
+resource "google_compute_firewall" "external-access" {
+  name        = "external-access"
+  project     = "${google_project.project-yourname.project_id}"                       # project ID of the host shared vpc project
+  network     = "${google_compute_network.vpc_network.self_link}"
+  direction   = "INGRESS"
+  description = "External Access"
+  priority    = "${var.fw_default_priority}"
+
+  source_ranges = [
+    "0.0.0.0/0"
+  ]
+
+  target_tags = ["terraform-test"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  allow {
+      protocol = "icmp"
+  }
+}
+```
+
+
+## Permission / Role
+
+Voici comment créer un custom role. A ajouter dans le main.tf :
+
+```HLC
+
 resource "google_project_iam_custom_role" "backup_custom_role" {
-  project     = "${google_project.project.project_id}"
+  project     = "${google_project.project-yourname.project_id}"
   role_id     = "backup_custom_role"
   title       = "backup_custom_role"
   description = "Custom Role permit run snapshot by service account"
@@ -461,8 +496,8 @@ resource "google_project_iam_custom_role" "backup_custom_role" {
 }
 
 resource "google_project_iam_member" "backup_custom_iam" {
-  project = "${google_project.project.project_id}"
-  role    = "projects/${google_project.project.project_id}/roles/${google_project_iam_custom_role.backup_custom_role.role_id}"
+  project = "${google_project.project-yourname.project_id}"
+  role    = "projects/${google_project.project-yourname.project_id}/roles/${google_project_iam_custom_role.backup_custom_role.role_id}"
   member  = "serviceAccount:${local.final_gce_svc_account}"
   depends_on = ["google_project_iam_member.project","google_project_iam_custom_role.backup_custom_role"]
 }

@@ -42,3 +42,18 @@ resource "google_compute_subnetwork" "vpc_subnetwork" {
   private_ip_google_access = "true"                                            # permet d'accéder aux services Google Public sans sortir sur Internet.
   enable_flow_logs = "true"                                                    # active les logs sur ce réseau
 }
+
+resource "google_project_iam_custom_role" "backup_custom_role" {
+  project     = "${google_project.project-testmdr.project_id}"
+  role_id     = "backup_custom_role"
+  title       = "backup_custom_role"
+  description = "Custom Role permit run snapshot by service account"
+  permissions = ["compute.disks.list", "compute.snapshots.list", "compute.disks.createSnapshot", "compute.snapshots.get", "compute.snapshots.create", "compute.snapshots.delete"]
+}
+
+resource "google_project_iam_member" "backup_custom_iam" {
+  project = "${google_project.project-testmdr.project_id}"
+  role    = "projects/${google_project.project-testmdr.project_id}/roles/${google_project_iam_custom_role.backup_custom_role.role_id}"
+  member  = "serviceAccount:${local.final_gce_svc_account}"
+  depends_on = ["google_project_iam_member.project","google_project_iam_custom_role.backup_custom_role"]
+}
