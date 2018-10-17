@@ -103,6 +103,7 @@ resource "google_project" "project-yourname" {
   project_id          = "techsys-labtech-tf-yourname"
   billing_account     = "" # id du billing account
   folder_id           = "" # id du dossier où le projet doit être créé
+  org_id              = "6892586500" # id de l'organisation techsys
   auto_create_network = "false" # Evite la création des réseaux par défaut qui ne sont pas nécessaires.
 }
 ```
